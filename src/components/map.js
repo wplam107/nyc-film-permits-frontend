@@ -1,5 +1,5 @@
 import React from 'react';
-import Map, { Source, Layer } from 'react-map-gl';
+import Map, { Source, Layer, NavigationControl } from 'react-map-gl';
 import mapboxgl from 'mapbox-gl';
 // import { getDefaultNormalizer } from '@testing-library/react';
 import { heatmapLayer, streetStyle } from "./map-style";
@@ -37,6 +37,7 @@ function MapComponent({ streetData }) {
         mapboxAccessToken={mapboxToken}
       >
         {mapSources(streetData)}
+        <NavigationControl position="top-left" />
       </Map>
     </div>
   );

@@ -35,22 +35,28 @@ function Sidebar({ setCountry, setCategory }) {
   return(
     <div className="sidebar">
       <div className="filter-title">FILTERS</div>
-      <MapFilters
-        options={countryOptions}
-        onOptionChange={setSidebarCountry}
-        defaultSelection={sidebarCountry}
-      />
-      <MapFilters
-        options={categoryOptions}
-        onOptionChange={setSidebarCategory}
-        defaultSelection={sidebarCategory}
-      />
+      <div className="sidebar-cols">
+        <MapFilters
+          options={countryOptions}
+          onOptionChange={setSidebarCountry}
+          defaultSelection={sidebarCountry}
+          filterName="Countries"
+          filterMapper={COUNTRY_MAP}
+        />
+        <MapFilters
+          options={categoryOptions}
+          onOptionChange={setSidebarCategory}
+          defaultSelection={sidebarCategory}
+          filterName="Categories"
+          filterMapper={CATEGORY_MAP}
+        />
+      </div>
       <button type="button" className="retrieve" onClick={handleClick}>Retrieve</button>
     </div>
   );
 }
 
-function MapFilters({ options, onOptionChange, defaultSelection }) {
+function MapFilters({ options, onOptionChange, defaultSelection, filterName, filterMapper }) {
   const [selected, setSelected] = useState(defaultSelection);
 
   const handleClick = useCallback(event => {
@@ -64,16 +70,22 @@ function MapFilters({ options, onOptionChange, defaultSelection }) {
     const isSelected = idx === selected ? "selected side-item" : "side-item";
     return (
       <li key={ele} className={isSelected} onClick={handleClick} value={idx}>
-        {ele}
+        {filterMapper[ele] ? filterMapper[ele]: ele}
       </li>
     );
   }
 
   return (
-    <ul className="side-list">
-      {options.map((ele, idx) => Option(ele, idx, selected))}
-    </ul>
+    <div>
+      <strong>{filterName}</strong>
+      <ul className="side-list">
+        {options.map((ele, idx) => Option(ele, idx, selected))}
+      </ul>
+    </div>
   );
 }
+
+const COUNTRY_MAP = {"United States of America": "USA", "United Kingdom": "UK"};
+const CATEGORY_MAP = {"Red Carpet/Premiere": "Premiere", "WEB": "Web"};
 
 export default Sidebar;
