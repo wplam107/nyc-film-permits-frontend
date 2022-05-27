@@ -50,6 +50,7 @@ function App() {
     <div className="App">
       <header>
         <h1>NYC Film Map</h1>
+        {streetData ? <h3>Zoom In For Streets</h3> : <h3>SELECT FILTERS</h3>}
       </header>
       <div className="content">
         <div className="flex-container">

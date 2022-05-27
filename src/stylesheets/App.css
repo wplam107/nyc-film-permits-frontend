@@ -179,11 +179,17 @@
   justify-content: center;
   align-items: center;
   vertical-align: middle;
+  cursor: pointer;
 }
 
 .card-text {
   font-size: small;
   text-align: center;
+}
+
+.cards-header {
+  font-size: 20px;
+  font-weight: bold;
 }
 
 button.retrieve {

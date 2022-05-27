@@ -17,7 +17,7 @@ function Cards({ permitData, setInclusive, lastStart, setCursor, setCounter, cou
     };
     initial = dateToString(initial);
     final = dateToString(final);
-    cardsHeader = `From ${initial} to ${final}`;
+    cardsHeader = `From ${initial} to ${final} - Ordered by latest 100`;
     leftButton = "<" + LIMIT;
     rightButton = LIMIT + ">";
   } else {
@@ -40,8 +40,8 @@ function Cards({ permitData, setInclusive, lastStart, setCursor, setCounter, cou
     <div className="cards-outer">
       <button type="button" className="page-click-left" onClick={leftClick}><strong>{leftButton}</strong></button>
       <div className="cards-inner">
-        <div className="date-range">
-          <strong>{cardsHeader}</strong>
+        <div className="cards-header">
+          {cardsHeader}
         </div>
         <ul className="card-list">
           {permitData.map((doc) => <Card doc={doc} setPermitId={setPermitId} />)}
