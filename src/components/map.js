@@ -3,7 +3,7 @@ import { Map, Source, Layer, NavigationControl, Popup } from 'react-map-gl';
 import mapboxgl from 'mapbox-gl';
 import bbox from "@turf/bbox";
 // import { getDefaultNormalizer } from '@testing-library/react';
-import { heatmapLayer, streetStyle } from "./map-style";
+import { heatmapLayer, streetStyle, singlePermit } from "./map-style";
 
 
 /* eslint-disable */
@@ -67,7 +67,7 @@ function PopupMap({ permitId, setPermitId, streetData }) {
   function mapPermit(permitGeo) {
     return (
       <Source id="popup-data" type="geojson" data={permitGeo}>
-        <Layer {...streetStyle} />
+        <Layer {...singlePermit} />
       </Source>
     );
   }
