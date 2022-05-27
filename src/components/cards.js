@@ -17,7 +17,7 @@ function Cards({ permitData, setInclusive, lastStart, setCursor, setCounter, cou
     };
     initial = dateToString(initial);
     final = dateToString(final);
-    cardsHeader = `From ${initial} to ${final} - Ordered by latest 100`;
+    cardsHeader = `From ${initial} to ${final} - Ordered By Latest 100, Select Permit`;
     leftButton = "<" + LIMIT;
     rightButton = LIMIT + ">";
   } else {
