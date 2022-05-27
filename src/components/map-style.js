@@ -99,3 +99,15 @@ export const streetStyle = {
     ]
   }
 };
+
+export const singlePermit = {
+  id: "streets",
+  source: "street-data",
+  type: "line",
+  // minzoom: 9.5,
+  paint: {
+    "line-width": 3,
+    "line-color": "rgb(178,24,43)",
+    "line-opacity": 1
+  }
+};

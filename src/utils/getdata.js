@@ -1,6 +1,5 @@
 import { collection, getDocs, query, where, orderBy, limit, startAt, startAfter } from "firebase/firestore";
-
-const LIMIT = 10;
+import { LIMIT } from "../configurations";
 
 async function getData(db, country, category, sortOrder, inclusive, cursor) {
   if ((country == null) || (category == null)){
@@ -135,7 +134,7 @@ async function getData(db, country, category, sortOrder, inclusive, cursor) {
         const geom = (0, eval)('(' + jsonString + ')');
         const feature = {
           "type": "Feature",
-          "properties": {"mag": 0.2},
+          "properties": {"mag": 0.2, "eventid": docData["eventid"]},
           "geometry": geom
         };
         sData["features"].push(feature);

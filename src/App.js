@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import db from "./utils/firebase";
+import bbox from "@turf/bbox";
 
 import './stylesheets/App.css';
 
@@ -19,10 +20,10 @@ function App() {
   const [cursor, setCursor] = useState(null);
   const [lastStart, setLastStart] = useState([]);
   const [counter, setCounter] = useState(0);
+  const [permitId, setPermitId] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
-      console.log(cursor ? cursor.data()["eventid"]: null);
       const allData = await getData(db, country, category, sortOrder, inclusive, cursor, lastStart, setLastStart);
       const [sData, pData, n, m] = allData;
       setStreetData(sData);
@@ -42,8 +43,6 @@ function App() {
         newLastStart.pop();
         setLastStart(newLastStart);
       };
-      const lsData = newLastStart.map((d) => d.data()["eventid"]);
-      console.log(lsData);
     });
   }, [country, category, sortOrder, counter])
 
@@ -63,7 +62,7 @@ function App() {
             setCounter={setCounter}
             counter={counter}
           />
-          <MapComponent streetData={streetData} />
+          <MapComponent streetData={streetData} permitId={permitId} setPermitId={setPermitId} />
         </div>
         <div className="cards-container">
           <Cards
@@ -73,6 +72,7 @@ function App() {
             setCursor={setCursor}
             setCounter={setCounter}
             counter={counter}
+            setPermitId={setPermitId}
           />
         </div>
       </div>

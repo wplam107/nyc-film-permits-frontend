@@ -1,6 +1,8 @@
 import dateToString from '../utils/datetostring';
+import { LIMIT } from "../configurations";
+import { useCallback } from 'react';
 
-function Cards({ permitData, setInclusive, lastStart, setCursor, setCounter, counter }) {
+function Cards({ permitData, setInclusive, lastStart, setCursor, setCounter, counter, setPermitId }) {
   let cardsHeader, leftButton, rightButton;
   if (permitData.length !== 0) {
     let initial, final;
@@ -16,8 +18,8 @@ function Cards({ permitData, setInclusive, lastStart, setCursor, setCounter, cou
     initial = dateToString(initial);
     final = dateToString(final);
     cardsHeader = `From ${initial} to ${final}`;
-    leftButton = "-100";
-    rightButton = "+100";
+    leftButton = "<" + LIMIT;
+    rightButton = LIMIT + ">";
   } else {
     cardsHeader = "Select Filters";
   };
@@ -42,7 +44,7 @@ function Cards({ permitData, setInclusive, lastStart, setCursor, setCounter, cou
           <strong>{cardsHeader}</strong>
         </div>
         <ul className="card-list">
-          {permitData.map((doc) => makeCard(doc))}
+          {permitData.map((doc) => <Card doc={doc} setPermitId={setPermitId} />)}
         </ul>
       </div>
       <button type="button" className="page-click-right" onClick={rightClick}><strong>{rightButton}</strong></button>
@@ -50,23 +52,28 @@ function Cards({ permitData, setInclusive, lastStart, setCursor, setCounter, cou
   );
 }
 
-function makeCard(doc) {
+function Card({ doc, setPermitId }) {
   const key = doc["Event ID"];
   const country = ABBR[doc["Country"]].toUpperCase();
   const flag = country.replace(
     /./g,
     char => String.fromCodePoint(char.charCodeAt(0)+127397)
   );
+
+  function handleClick() {
+    setPermitId(false);
+    setPermitId(key);
+  }
   
   return (
-    <li key={key} className="card-container">
+    <li key={key} className="card-container" onClick={handleClick}>
       <ul className="card">
-        <li className="card-text"><strong>ID:</strong> {key}</li>
-        <li className="card-text"><strong>Country:</strong> {flag}</li>
-        <li className="card-text"><strong>Start:</strong> {dateToString(doc["Start Date"])}</li>
-        <li className="card-text"><strong>End:</strong> {dateToString(doc["End Date"])}</li>
-        <li className="card-text"><strong>Category:</strong> {doc["Category"]}</li>
-        <li className="card-text"><strong>Subcategory:</strong> {doc["Subcategory"]}</li>
+        <li className="card-text" key={`id-${key}`}><strong>ID:</strong> {key}</li>
+        <li className="card-text" key={`country-${key}`}><strong>Country:</strong> {flag}</li>
+        <li className="card-text" key={`sd-${key}`}><strong>Start:</strong> {dateToString(doc["Start Date"])}</li>
+        <li className="card-text" key={`ed-${key}`}><strong>End:</strong> {dateToString(doc["End Date"])}</li>
+        <li className="card-text" key={`cat-${key}`}><strong>Category:</strong> {doc["Category"]}</li>
+        <li className="card-text" key={`subcat-${key}`}><strong>Subcategory:</strong> {doc["Subcategory"]}</li>
       </ul>
     </li>
   );
