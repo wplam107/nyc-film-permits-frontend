@@ -15,16 +15,37 @@ function App() {
   const [streetData, setStreetData] = useState(null);
   const [permitData, setPermitData] = useState([]);
   const [sortOrder, setSortOrder] = useState("desc");
+  const [inclusive, setInclusive] = useState(null);
+  const [cursor, setCursor] = useState(null);
+  const [lastStart, setLastStart] = useState([]);
+  const [counter, setCounter] = useState(0);
 
   useEffect(() => {
     async function fetchData() {
-      const allData = await getData(db, country, category, sortOrder);
-      const [sData, pData] = allData;
+      console.log(cursor ? cursor.data()["eventid"]: null);
+      const allData = await getData(db, country, category, sortOrder, inclusive, cursor, lastStart, setLastStart);
+      const [sData, pData, n, m] = allData;
       setStreetData(sData);
       setPermitData(pData);
+      return [n, m];
     }
-    fetchData();
-  }, [country, category, sortOrder])
+    fetchData().then((data) => {
+      const newLastStart = lastStart;
+      if (inclusive !== "Yes") {
+        if (data[0] !== undefined && data[1] !== undefined) {
+          newLastStart.push(data[0]);
+          newLastStart.push(data[1]);
+          setLastStart(newLastStart);
+        }
+      } else {
+        newLastStart.pop();
+        newLastStart.pop();
+        setLastStart(newLastStart);
+      };
+      const lsData = newLastStart.map((d) => d.data()["eventid"]);
+      console.log(lsData);
+    });
+  }, [country, category, sortOrder, counter])
 
   return (
     <div className="App">
@@ -33,11 +54,26 @@ function App() {
       </header>
       <div className="content">
         <div className="flex-container">
-          <Sidebar setCountry={setCountry} setCategory={setCategory} />
+          <Sidebar
+            setCountry={setCountry}
+            setCategory={setCategory}
+            setLastStart={setLastStart}
+            setInclusive={setInclusive}
+            setCursor={setCursor}
+            setCounter={setCounter}
+            counter={counter}
+          />
           <MapComponent streetData={streetData} />
         </div>
         <div className="cards-container">
-          <Cards permitData={permitData} />
+          <Cards
+            permitData={permitData}
+            setInclusive={setInclusive}
+            lastStart={lastStart}
+            setCursor={setCursor}
+            setCounter={setCounter}
+            counter={counter}
+          />
         </div>
       </div>
     </div>

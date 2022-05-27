@@ -1,41 +1,115 @@
-import { collection, getDocs, query, where, orderBy, limit } from "firebase/firestore";
+import { collection, getDocs, query, where, orderBy, limit, startAt, startAfter } from "firebase/firestore";
 
-async function getData(db, country, category, sortOrder) {
+const LIMIT = 10;
+
+async function getData(db, country, category, sortOrder, inclusive, cursor) {
   if ((country == null) || (category == null)){
     return [null, []];
   }
   const streetsRef = collection(db, "permits");
   let q;
   if ((category === "ALL") && (country === "ALL")) {
-    q = query(
-      streetsRef,
-      orderBy("startdate", sortOrder),
-      limit(1000)
-    );
+    if (inclusive === "Yes") {
+      q = query(
+        streetsRef,
+        orderBy("startdate", sortOrder),
+        startAt(cursor),
+        limit(LIMIT)
+      );
+    } else if (inclusive === "No") {
+      q = query(
+        streetsRef,
+        orderBy("startdate", sortOrder),
+        startAfter(cursor),
+        limit(LIMIT)
+      );
+    } else {
+      q = query(
+        streetsRef,
+        orderBy("startdate", sortOrder),
+        limit(LIMIT)
+      );
+    }
   } else if (country === "ALL") {
-    q = query(
-      streetsRef,
-      where("catgory", "==", category),
-      orderBy("startdate", sortOrder),
-      limit(1000)
-    );
+    if (inclusive === "Yes") {
+      q = query(
+        streetsRef,
+        where("catgory", "==", category),
+        orderBy("startdate", sortOrder),
+        startAt(cursor),
+        limit(LIMIT)
+      );
+    } else if (inclusive === "No") {
+      q = query(
+        streetsRef,
+        where("catgory", "==", category),
+        orderBy("startdate", sortOrder),
+        startAfter(cursor),
+        limit(LIMIT)
+      );
+    } else {
+      q = query(
+        streetsRef,
+        where("catgory", "==", category),
+        orderBy("startdate", sortOrder),
+        limit(LIMIT)
+      );
+    }
   } else if (category === "ALL") {
-    q = query(
-      streetsRef,
-      where("country", "==", country),
-      orderBy("startdate", sortOrder),
-      limit(1000)
-    );
+    if (inclusive === "Yes") {
+      q = query(
+        streetsRef,
+        where("country", "==", country),
+        orderBy("startdate", sortOrder),
+        startAt(cursor),
+        limit(LIMIT)
+      );
+    } else if (inclusive === "No") {
+      q = query(
+        streetsRef,
+        where("country", "==", country),
+        orderBy("startdate", sortOrder),
+        startAfter(cursor),
+        limit(LIMIT)
+      );
+    } else {
+      q = query(
+        streetsRef,
+        where("country", "==", country),
+        orderBy("startdate", sortOrder),
+        limit(LIMIT)
+      );
+    }
   } else {
-    q = query(
-      streetsRef,
-      where("country", "==", country),
-      where("category", "==", category),
-      orderBy("startdate", sortOrder),
-      limit(1000)
-    );
+    if (inclusive === "Yes") {
+      q = query(
+        streetsRef,
+        where("country", "==", country),
+        where("category", "==", category),
+        orderBy("startdate", sortOrder),
+        startAt(cursor),
+        limit(LIMIT)
+      );
+    } else if (inclusive === "No") {
+      q = query(
+        streetsRef,
+        where("country", "==", country),
+        where("category", "==", category),
+        orderBy("startdate", sortOrder),
+        startAfter(cursor),
+        limit(LIMIT)
+      );
+    } else {
+      q = query(
+        streetsRef,
+        where("country", "==", country),
+        where("category", "==", category),
+        orderBy("startdate", sortOrder),
+        limit(LIMIT)
+      );
+    }
   }
-  
+
   const querySnapshot = await getDocs(q);
   if (!querySnapshot.empty) {
     const sData = {
@@ -67,7 +141,7 @@ async function getData(db, country, category, sortOrder) {
         sData["features"].push(feature);
       };
     });
-    const allData = Array(sData, pData);
+    const allData = [sData, pData, querySnapshot.docs[0], querySnapshot.docs[querySnapshot.docs.length-1]];
     return allData;
   } else {
     return [null, []];

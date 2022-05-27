@@ -5,7 +5,7 @@ import db from "../utils/firebase";
 import '../stylesheets/sidebar.css';
 // import { getDefaultNormalizer } from '@testing-library/react';
 
-function Sidebar({ setCountry, setCategory }) {
+function Sidebar({ setCountry, setCategory, setLastStart, setInclusive, setCursor, setCounter, counter }) {
   const [sidebarCountry, setSidebarCountry] = useState(0);
   const [sidebarCategory, setSidebarCategory] = useState(0);
   const [countryOptions, setCountryOptions] = useState([]);
@@ -30,6 +30,10 @@ function Sidebar({ setCountry, setCategory }) {
   const handleClick = useCallback(() => {
     setCountry(sidebarCountry);
     setCategory(sidebarCategory);
+    setLastStart([]);
+    setInclusive(null);
+    setCursor(null);
+    setCounter(counter + 1);
   }, [setCountry, setCategory, sidebarCountry, sidebarCategory]);
 
   return(
